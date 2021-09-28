@@ -3,7 +3,7 @@
 
 provides a mechanism to call methods defined as interface `T` implemented in the main process from preload via IPC.
 
-once defined descritptor D as `IpcProxyDescriptor<T>` and initialized with `setupForMain<D>`, `setupForPreload<D>` and `setupForTest<D>`, you can use the object implements T in the main process, preload in render process and unit tests respectively.
+once defined descriptor D as `IpcProxyDescriptor<T>` and initialized with `setupForMain<D>`, `setupForPreload<D>` and `setupForTest<D>`, you can use the object implements T in the main process, preload in render process and unit tests respectively.
 
 ### IpcProxyDescriptor
 ```typescript
@@ -17,7 +17,7 @@ type IpcProxyDescriptor<T> = {
 ```
 describe common parameters for electron-testable-ipc-proxy.
 * `T`: interface `T` described above.
-* `window`: define the name to assgin into global object `window`.
+* `window`: define the name to assign into global object `window`.
 * `IpcChannel`:  IPC channel name to communicate between main process and renderer process.
 * `template`: class instance object with dummy methods declared in interface T. used only names of methods.
 ### setupForMain
@@ -49,7 +49,7 @@ function setupForTest<T, U>(Descriptor: IpcProxyDescriptor<T>, fn: (key: keyof T
 }
 ```
 * to use with jest, should be called this in a module which imported before the test target module.
-* this function creates an object implements each methods of T by given `fn` (pass `jest.fn()` for jest) to be accessed from your tests, and injects to global `window` object forbe called from test target.
+* this function creates an object implements each methods of T by given `fn` (pass `jest.fn()` for jest) to be accessed from your tests, and injects to global `window` object to be called from test target.
   
 ## Example code
 full code are in [here](https://github.com/koizuka/react-typescript-electron-sample-with-create-react-app-and-electron-builder).
