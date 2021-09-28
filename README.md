@@ -3,13 +3,13 @@
 
 provides a mechanism to call methods defined as interface `T` implemented in the main process from preload via IPC.
 
-once defined discritptor D as `IpcProxyDiscriptor<T>` and initialized with `setupForMain<D>`, `setupForPreload<D>` and `setupForTest<D>`, you can use the object implements T in the main process, preload in render process and unit tests respectively.
+once defined descritptor D as `IpcProxyDescriptor<T>` and initialized with `setupForMain<D>`, `setupForPreload<D>` and `setupForTest<D>`, you can use the object implements T in the main process, preload in render process and unit tests respectively.
 
-### IpcProxyDiscriptor
+### IpcProxyDescriptor
 ```typescript
-import { IpcProxyDiscriptor } from 'electron-testable-ipc-proxy';
+import { IpcProxyDescriptor } from 'electron-testable-ipc-proxy';
 
-type IpcProxyDiscriptor<T> = {
+type IpcProxyDescriptor<T> = {
   window: string;
   IpcChannel: string;
   template: T;
@@ -24,17 +24,17 @@ describe common parameters for electron-testable-ipc-proxy.
 ```typescript
 import { setupForMain } from 'electron-testable-ipc-proxy';
 
-function setupForMain<T>(discriptor: IpcProxyDiscriptor<T>, ipcMain, impl: T): void
+function setupForMain<T>(Descriptor: IpcProxyDescriptor<T>, ipcMain, impl: T): void
 ```
 * should be called in main process of Electron before loading the page in BrowserWindow.
-* `impl` pass an instance which implemented `T` to be called from renderer process throu IPC named by discriptor.IpcChannel.
+* `impl` pass an instance which implemented `T` to be called from renderer process throu IPC named by Descriptor.IpcChannel.
 * `ipcMain`: pass `ipcMain` of Electron.
 
 ### setupForPreload
 ```typescript
 import { setupForPreload } from 'electron-testable-ipc-proxy';
 
-function setupForPreload<T>(discriptor: IpcProxyDiscriptor<T>, exposeInMainWorld, ipcRenderer): void
+function setupForPreload<T>(Descriptor: IpcProxyDescriptor<T>, exposeInMainWorld, ipcRenderer): void
 ```
 * should be called in preload module in renderer process of Electron.
 * setups proxy object into global `window` object as named by  `descriptor.window`.
@@ -44,7 +44,7 @@ function setupForPreload<T>(discriptor: IpcProxyDiscriptor<T>, exposeInMainWorld
 ```typescript
 import { setupForTest } from 'electron-testable-ipc-proxy';
 
-function setupForTest<T, U>(discriptor: IpcProxyDiscriptor<T>, fn: (key: keyof T, fn: (...args: unknown[]) => unknown) => U): {
+function setupForTest<T, U>(Descriptor: IpcProxyDescriptor<T>, fn: (key: keyof T, fn: (...args: unknown[]) => unknown) => U): {
   [k in keyof T]: U;
 }
 ```
@@ -72,7 +72,7 @@ declare global {
 }
 ```
 
-* src/MyAPIDiscriptor.ts
+* src/MyAPIDescriptor.ts
 ```typescript
 class MyAPITemplate implements MyAPI {
   private dontCallMe = new Error("don't call me");
@@ -80,7 +80,7 @@ class MyAPITemplate implements MyAPI {
   openDialog(): Promise<never> { throw this.dontCallMe; }
 }
 
-export const MyAPIDiscriptor: IpcProxyDiscriptor<MyAPI> = {
+export const MyAPIDescriptor: IpcProxyDescriptor<MyAPI> = {
   window: 'myAPI',
   IpcChannel: 'my-api',
   template: new MyAPITemplate(),
@@ -89,7 +89,7 @@ export const MyAPIDiscriptor: IpcProxyDiscriptor<MyAPI> = {
 
 * electron/preload.ts
 ```typescript
-setupForPreload(MyAPIDiscriptor, contextBridge.exposeInMainWorld, ipcRenderer);
+setupForPreload(MyAPIDescriptor, contextBridge.exposeInMainWorld, ipcRenderer);
 ```
 
 * electron/main.ts
@@ -122,7 +122,7 @@ class MyApiServer implements MyAPI {
 };
 ...
   const myApi = new MyApiServer(win);
-  setupForMain(MyAPIDiscriptor, ipcMain, myApi);
+  setupForMain(MyAPIDescriptor, ipcMain, myApi);
 ```
 
 * src/App.tsx
@@ -160,7 +160,7 @@ function App() {
 
 * src/mock/myAPI.ts
 ```typescript
-export const myAPI = setupForTest(MyAPIDiscriptor, () => jest.fn());
+export const myAPI = setupForTest(MyAPIDescriptor, () => jest.fn());
 ```
 
 * src/App.test.tsx

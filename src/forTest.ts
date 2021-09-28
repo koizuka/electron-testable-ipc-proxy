@@ -1,8 +1,8 @@
 import { createProxyObjectFromTemplate } from './createProxyObjectFromTemplate';
-import { IpcProxyDiscriptor } from './IpcProxyDiscriptor';
+import { IpcProxyDescriptor } from './IpcProxyDescriptor';
 
 
-export function setupForTest<T, U>(discriptor: IpcProxyDiscriptor<T>, fn: (key: keyof T, fn: (...args: unknown[]) => unknown) => U): {
+export function setupForTest<T, U>(discriptor: IpcProxyDescriptor<T>, fn: (key: keyof T, fn: (...args: unknown[]) => unknown) => U): {
   [k in keyof T]: U;
 } {
   const mock = createProxyObjectFromTemplate(discriptor.template, fn);

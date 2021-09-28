@@ -1,4 +1,4 @@
-import { IpcProxyDiscriptor } from './IpcProxyDiscriptor';
+import { IpcProxyDescriptor } from './IpcProxyDescriptor';
 import { createProxyObjectFromTemplate } from "./createProxyObjectFromTemplate";
 
 type IpcMain = { handle: (channel: string, fn: (event: unknown, name: string, ...args: unknown[]) => unknown) => void }
@@ -30,10 +30,10 @@ function createIpcRendererProxy<T>(ipcRenderer: IpcRenderer, channel: string, fr
   return createProxyObjectFromTemplate<T, unknown>(from, (cur) => (...args: unknown[]) => ipcRenderer.invoke(channel, cur, ...args)) as T;
 }
 
-export function setupForPreload<T>(discriptor: IpcProxyDiscriptor<T>, exposeInMainWorld: (apiKey: string, value: T) => void, ipcRenderer: IpcRenderer): void {
+export function setupForPreload<T>(discriptor: IpcProxyDescriptor<T>, exposeInMainWorld: (apiKey: string, value: T) => void, ipcRenderer: IpcRenderer): void {
   exposeInMainWorld(discriptor.window, createIpcRendererProxy<T>(ipcRenderer, discriptor.IpcChannel, discriptor.template));
 }
 
-export function setupForMain<T>(discriptor: IpcProxyDiscriptor<T>, ipcMain: IpcMain, impl: T): void {
+export function setupForMain<T>(discriptor: IpcProxyDescriptor<T>, ipcMain: IpcMain, impl: T): void {
   registerIpcMainHandler<T>(ipcMain, discriptor.IpcChannel, impl);
 }
