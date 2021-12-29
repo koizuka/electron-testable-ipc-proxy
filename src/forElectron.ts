@@ -23,17 +23,17 @@ function registerIpcMainHandler<T>(ipcMain: IpcMain, channel: string, impl: T): 
 /**
  * 目的のinterface TからIPCを通じてmain側の実装を呼び出すproxyを生成する。preload.ts で contextBridge.exposeInMainWorld に与えること。
  * @param channel IPCのチャンネル。registerIpcMainHandler の channel と同じであること。
- * @param from 目的のinteface Tを実装したダミークラスのインスタンス
+ * @param from 目的のinterface Tを実装したダミークラスのインスタンス
  * @returns contextBridge.exposeInMainWorld の第2引数に与えるオブジェクト
  */
 function createIpcRendererProxy<T>(ipcRenderer: IpcRenderer, channel: string, from: T): T {
   return createProxyObjectFromTemplate<T, unknown>(from, (cur) => (...args: unknown[]) => ipcRenderer.invoke(channel, cur, ...args)) as T;
 }
 
-export function setupForPreload<T>(discriptor: IpcProxyDescriptor<T>, exposeInMainWorld: (apiKey: string, value: T) => void, ipcRenderer: IpcRenderer): void {
-  exposeInMainWorld(discriptor.window, createIpcRendererProxy<T>(ipcRenderer, discriptor.IpcChannel, discriptor.template));
+export function setupForPreload<T>(descriptor: IpcProxyDescriptor<T>, exposeInMainWorld: (apiKey: string, value: T) => void, ipcRenderer: IpcRenderer): void {
+  exposeInMainWorld(descriptor.window, createIpcRendererProxy<T>(ipcRenderer, descriptor.IpcChannel, descriptor.template));
 }
 
-export function setupForMain<T>(discriptor: IpcProxyDescriptor<T>, ipcMain: IpcMain, impl: T): void {
-  registerIpcMainHandler<T>(ipcMain, discriptor.IpcChannel, impl);
+export function setupForMain<T>(descriptor: IpcProxyDescriptor<T>, ipcMain: IpcMain, impl: T): void {
+  registerIpcMainHandler<T>(ipcMain, descriptor.IpcChannel, impl);
 }
