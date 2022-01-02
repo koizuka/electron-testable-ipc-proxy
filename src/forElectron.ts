@@ -26,14 +26,14 @@ function registerIpcMainHandler<T>(ipcMain: Handler, channel: string, impl: T): 
  * @param from 目的のinterface Tを実装したダミークラスのインスタンス
  * @returns contextBridge.exposeInMainWorld の第2引数に与えるオブジェクト
  */
-function createIpcRendererProxy<T>(ipcRenderer: Invoker, channel: string, from: T): T {
+function createIpcRendererProxy<T extends {}>(ipcRenderer: Invoker, channel: string, from: T): T {
   return createProxyObjectFromTemplate<T, unknown>(from, (cur) => (...args: unknown[]) => ipcRenderer.invoke(channel, cur, ...args)) as T;
 }
 
-export function setupForPreload<T>(descriptor: IpcProxyDescriptor<T>, exposeInMainWorld: (apiKey: string, value: T) => void, ipcRenderer: Invoker): void {
+export function setupForPreload<T extends {}>(descriptor: IpcProxyDescriptor<T>, exposeInMainWorld: (apiKey: string, value: T) => void, ipcRenderer: Invoker): void {
   exposeInMainWorld(descriptor.window, createIpcRendererProxy<T>(ipcRenderer, descriptor.IpcChannel, descriptor.template));
 }
 
-export function setupForMain<T>(descriptor: IpcProxyDescriptor<T>, ipcMain: Handler, impl: T): void {
+export function setupForMain<T extends {}>(descriptor: IpcProxyDescriptor<T>, ipcMain: Handler, impl: T): void {
   registerIpcMainHandler<T>(ipcMain, descriptor.IpcChannel, impl);
 }
