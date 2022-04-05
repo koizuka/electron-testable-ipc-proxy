@@ -2,7 +2,7 @@ import { setupForMain, setupForPreload } from "./forElectron";
 import { IpcProxyDescriptor } from "./IpcProxyDescriptor";
 
 interface TestInterface {
-  doSomething: (param: number) => Promise<void>;
+  doSomething: (param: number | string) => Promise<void>;
 }
 
 class TestTemplate implements TestInterface {
@@ -18,7 +18,7 @@ const desc: IpcProxyDescriptor<TestInterface> = {
 };
 
 class MockClass implements TestInterface {
-  async doSomething(n: number): Promise<void> { }
+  async doSomething(n: number | string): Promise<void> { }
 }
 
 describe('setupForMain', () => {
@@ -45,7 +45,9 @@ describe('setupForPreload', () => {
   const exposeInMainWorld = (apiKey: string, value: TestInterface) => {
     exposed[apiKey] = value;
   };
-  const invoke = jest.fn<Promise<void>, [string, ...unknown[]]>();
+  const invoke = jest.fn<Promise<void>, [string, ...unknown[]]>()
+    .mockResolvedValueOnce(undefined)
+    .mockRejectedValueOnce(new Error(`Error invoking remote method '${desc.IpcChannel}': Error: invoke`));
 
   setupForPreload(desc, exposeInMainWorld, { invoke });
   expect(exposed[desc.window]).toBeDefined();
@@ -53,7 +55,11 @@ describe('setupForPreload', () => {
 
   test('doSomething', async () => {
     const proxy = exposed[desc.window] as TestInterface;
+
     await proxy.doSomething(1);
     expect(invoke).toBeCalledWith(desc.IpcChannel, 'doSomething', 1);
+
+    await expect(proxy.doSomething('a')).rejects.toThrow(`'test'.doSomething("a"): invoke`);
+    expect(invoke).toBeCalledWith(desc.IpcChannel, 'doSomething', 'a');
   });
 });

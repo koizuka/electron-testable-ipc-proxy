@@ -20,6 +20,12 @@ function registerIpcMainHandler<T>(ipcMain: Handler, channel: string, impl: T): 
   });
 }
 
+function replaceError(channel: string, cur: string | number | symbol, args: unknown[], e: Error | unknown): Error {
+  const remover = `Error invoking remote method '${channel}': Error: `;
+  const msg = (e instanceof Error) ? e.message.replace(remover, '') : e;
+  return new Error(`Error invoking remote method '${channel}'.${String(cur)}(${JSON.stringify(args).replace(/^\[(.*)\]$/, '$1')}): ${msg}`);
+}
+
 /**
  * 目的のinterface TからIPCを通じてmain側の実装を呼び出すproxyを生成する。preload.ts で contextBridge.exposeInMainWorld に与えること。
  * @param channel IPCのチャンネル。registerIpcMainHandler の channel と同じであること。
@@ -27,7 +33,13 @@ function registerIpcMainHandler<T>(ipcMain: Handler, channel: string, impl: T): 
  * @returns contextBridge.exposeInMainWorld の第2引数に与えるオブジェクト
  */
 function createIpcRendererProxy<T extends {}>(ipcRenderer: Invoker, channel: string, from: T): T {
-  return createProxyObjectFromTemplate<T, unknown>(from, (cur) => (...args: unknown[]) => ipcRenderer.invoke(channel, cur, ...args)) as T;
+  return createProxyObjectFromTemplate<T, unknown>(from, (cur) => async (...args: unknown[]) => {
+    try {
+      return await ipcRenderer.invoke(channel, cur, ...args);
+    } catch (e: unknown) {
+      throw replaceError(channel, cur, args, e);
+    }
+  }) as T;
 }
 
 export function setupForPreload<T extends {}>(descriptor: IpcProxyDescriptor<T>, exposeInMainWorld: (apiKey: string, value: T) => void, ipcRenderer: Invoker): void {
