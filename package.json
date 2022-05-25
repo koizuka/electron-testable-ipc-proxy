@@ -41,7 +41,7 @@
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "jest": "^27.2.2",
-    "ts-jest": "^27.0.5"
+    "ts-jest": "^28.0.3"
   },
   "peerDependencies": {
     "electron": ">= 6.1.0"
