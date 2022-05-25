@@ -109,10 +109,10 @@ export function injectDataReceiverProxy<T extends {}>(target: T, desc: IpcProxyD
   return {
     receiver: (key: keyof T, value: unknown) => {
       if (!data.hasOwnProperty(key)) {
-        throw new Error(`unknown key: ${key}`);
+        throw new Error(`unknown key: ${String(key)}`);
       }
       if (typeof from[key] === 'function') {
-        throw new Error(`key is function: ${key}`);
+        throw new Error(`key is function: ${String(key)}`);
       }
 
       if (!target.hasOwnProperty(key)) {
