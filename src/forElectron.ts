@@ -9,7 +9,7 @@ type Invoker = { invoke: (channel: string, ...args: unknown[]) => Promise<unknow
  * @param channel IPCのチャンネル。 createIpcRendererProxy の channel と同じであること。
  * @param impl 目的のinterfaceを実装した処理クラスのインスタンス
  */
-function registerIpcMainHandler<T>(ipcMain: Handler, channel: string, impl: T): void {
+function registerIpcMainHandler<T extends {}>(ipcMain: Handler, channel: string, impl: T): void {
   const o = createProxyObjectFromTemplate(impl, (key, fn) => fn);
 
   ipcMain.handle(channel, async (event, name: string, ...args: unknown[]) => {
