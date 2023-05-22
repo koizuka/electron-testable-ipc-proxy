@@ -817,13 +817,13 @@
     "@rollup/pluginutils" "^5.0.1"
 
 "@rollup/plugin-terser@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.npmjs.org/@rollup/plugin-terser/-/plugin-terser-0.4.0.tgz#4c76249ad337f3eb04ab409332f23717af2c1fbf"
-  integrity sha512-Ipcf3LPNerey1q9ZMjiaWHlNPEHNU/B5/uh9zXLltfEQ1lVSLLeZSgAtTPWGyw8Ip1guOeq+mDtdOlEj/wNxQw==
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-terser/-/plugin-terser-0.4.3.tgz#c2bde2fe3a85e45fa68a454d48f4e73e57f98b30"
+  integrity sha512-EF0oejTMtkyhrkwCdg0HJ0IpkcaVg1MMSf2olHb2Jp+1mnLM04OhjpJWGma4HobiDTF0WCyViWuvadyE9ch2XA==
   dependencies:
-    serialize-javascript "^6.0.0"
-    smob "^0.0.6"
-    terser "^5.15.1"
+    serialize-javascript "^6.0.1"
+    smob "^1.0.0"
+    terser "^5.17.4"
 
 "@rollup/pluginutils@^4.1.2":
   version "4.2.1"
@@ -2343,9 +2343,9 @@ semver@^7.3.7:
   dependencies:
     lru-cache "^6.0.0"
 
-serialize-javascript@^6.0.0:
+serialize-javascript@^6.0.1:
   version "6.0.1"
-  resolved "https://registry.npmjs.org/serialize-javascript/-/serialize-javascript-6.0.1.tgz#b206efb27c3da0b0ab6b52f48d170b7996458e5c"
+  resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-6.0.1.tgz#b206efb27c3da0b0ab6b52f48d170b7996458e5c"
   integrity sha512-owoXEFjWRllis8/M1Q+Cw5k8ZH40e3zhp/ovX+Xr/vi1qj6QesbyXXViFbpNvWvPNAD62SutwEXavefrLJWj7w==
   dependencies:
     randombytes "^2.1.0"
@@ -2382,10 +2382,10 @@ slash@^3.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
 
-smob@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.npmjs.org/smob/-/smob-0.0.6.tgz#09b268fea916158a2781c152044c6155adbb8aa1"
-  integrity sha512-V21+XeNni+tTyiST1MHsa84AQhT1aFZipzPpOFAVB8DkHzwJyjjAmt9bgwnuZiZWnIbMo2duE29wybxv/7HWUw==
+smob@^1.0.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/smob/-/smob-1.1.1.tgz#6cdd7ab45980252df92c315a7375a053e4ffb950"
+  integrity sha512-i5aqEBPnDv9d77+NDxfjROtywxzNdAVNyaOr+RsLhM28Ts+Ar7luIp/Q+SBYa6wv/7BBcOpEkrhtDxsl2WA9Jg==
 
 source-map-support@0.5.13:
   version "0.5.13"
@@ -2485,10 +2485,10 @@ supports-color@^8.0.0:
   dependencies:
     has-flag "^4.0.0"
 
-terser@^5.15.1:
-  version "5.16.6"
-  resolved "https://registry.npmjs.org/terser/-/terser-5.16.6.tgz#f6c7a14a378ee0630fbe3ac8d1f41b4681109533"
-  integrity sha512-IBZ+ZQIA9sMaXmRZCUMDjNH0D5AQQfdn4WUjHL0+1lF4TP1IHRJbrhb6fNaXWikrYQTSkb7SLxkeXAiy1p7mbg==
+terser@^5.17.4:
+  version "5.17.5"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.17.5.tgz#557141b662b5978ac3d6a2f3d6455a26267ddcd4"
+  integrity sha512-NqFkzBX34WExkCbk3K5urmNCpEWqMPZnwGI1pMHwqvJ/zDlXC75u3NI7BrzoR8/pryy8Abx2e1i8ChrWkhH1Hg==
   dependencies:
     "@jridgewell/source-map" "^0.3.2"
     acorn "^8.5.0"
