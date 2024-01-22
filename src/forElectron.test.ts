@@ -1,3 +1,4 @@
+import { describe, expect, test, vi } from "vitest";
 import { setupForMain, setupForPreload } from "./forElectron";
 import { IpcProxyDescriptor } from "./IpcProxyDescriptor";
 
@@ -18,7 +19,8 @@ const desc: IpcProxyDescriptor<TestInterface> = {
 };
 
 class MockClass implements TestInterface {
-  async doSomething(n: number | string): Promise<void> { }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async doSomething(n: string | number): Promise<void> { }
 }
 
 describe('setupForMain', () => {
@@ -27,7 +29,7 @@ describe('setupForMain', () => {
     handler[channel] = fn;
   };
   const mock = new MockClass();
-  mock.doSomething = jest.fn<Promise<void>, [number]>();
+  mock.doSomething = vi.fn<[number], Promise<void>>();
 
   setupForMain(desc, { handle }, mock);
   expect(handler[desc.IpcChannel]).toBeDefined();
@@ -45,7 +47,7 @@ describe('setupForPreload', () => {
   const exposeInMainWorld = (apiKey: string, value: TestInterface) => {
     exposed[apiKey] = value;
   };
-  const invoke = jest.fn<Promise<void>, [string, ...unknown[]]>()
+  const invoke = vi.fn<[string, ...unknown[]], Promise<void>>()
     .mockResolvedValueOnce(undefined)
     .mockRejectedValueOnce(new Error(`Error invoking remote method '${desc.IpcChannel}': Error: invoke`));
 

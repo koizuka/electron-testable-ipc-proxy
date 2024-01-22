@@ -1,5 +1,6 @@
-import { injectDataReceiverProxy, injectDataSenderProxy } from "./injectDataProxy";
+import { describe, expect, test, vi } from "vitest";
 import { IpcProxyDescriptor } from "./IpcProxyDescriptor";
+import { injectDataReceiverProxy, injectDataSenderProxy } from "./injectDataProxy";
 
 interface TestInterface {
   doSomething: (param: number) => Promise<void>;
@@ -10,7 +11,7 @@ interface TestInterface {
 
 class TestTemplate implements TestInterface {
   private dontCallMe = new Error("don't call me");
-  private dummyPromise = new Promise(() => { }) as Promise<any>;
+  private dummyPromise = new Promise<string>(() => { });
 
   doSomething(): Promise<never> { throw this.dontCallMe; }
   data: number | undefined = 42; // dummy value
@@ -25,7 +26,7 @@ const desc: IpcProxyDescriptor<TestInterface> = {
 };
 
 class MockClass implements TestInterface {
-  async doSomething(n: number): Promise<void> { }
+  async doSomething(): Promise<void> { }
   data: number | undefined = 1;
   promiseData = Promise.resolve('hello');
   undefinedData: number | undefined;
@@ -35,25 +36,34 @@ function isPromise(v: unknown): v is Promise<unknown> {
   return v instanceof Promise;
 }
 
-test('injectDataReceiverProxy', async () => {
+describe('injectDataReceiverProxy', () => {
   const object = new MockClass();
   const { receiver, nextValue } = injectDataReceiverProxy(object, desc);
 
-  expect(object.hasOwnProperty('data')).toBe(false);
-  expect(object.data).toBe(undefined);
-  expect(object.promiseData).not.toBe(undefined);
-  expect(isPromise(object.promiseData)).toBe(true);
+  test('initial value', () => {
+    expect(Object.prototype.hasOwnProperty.call(object, 'data')).toBe(false);
+    expect(object.data).toBe(undefined);
+    expect(object.promiseData).not.toBe(undefined);
+    expect(isPromise(object.promiseData)).toBe(true);
+  });
 
-  expect(object.promiseData).resolves.toBe('hello');
+  test('inject new Promise value', async () => {
+    const p = nextValue('promiseData');
+    receiver('promiseData', 'hi');
+    await expect(p).resolves.toBe('hi');
+  });
 
-  const p = nextValue('data');
-  receiver('data', 1);
-  expect(object.hasOwnProperty('data')).toBe(true);
-  expect(object.data).toBe(1);
-  expect(p).resolves.toBe(1);
+  test('inject new value', async () => {
+    const p = nextValue('data');
+    receiver('data', 1);
+    expect(Object.prototype.hasOwnProperty.call(object, 'data')).toBe(true);
+    expect(object.data).toBe(1);
+    await expect(p).resolves.toBe(1);
+  });
 
-  // make sure data is read only
-  expect(() => { object.data = 3; }).toThrowError;
+  test('forbid change value directly', () => {
+    expect(() => { object.data = 3; }).toThrowError();
+  });
 });
 
 test('injectDataSenderProxy', async () => {
@@ -61,7 +71,7 @@ test('injectDataSenderProxy', async () => {
   sender.data = 1;
   sender.promiseData = new Promise(() => { }); // never resolves
 
-  const receiver = jest.fn<void, [string, unknown]>();
+  const receiver = vi.fn<[string, unknown], void>();
   injectDataSenderProxy(sender, receiver);
 
   expect(receiver).toBeCalledWith('data', 1);

@@ -6,7 +6,7 @@
  * @param fn keyに対応した関数を返す関数
  * @returns 作成されたオブジェクト
  */
-export function createProxyObjectFromTemplate<T extends {}, U>(from: T, fn: (key: keyof T, fn: (...args: unknown[]) => unknown) => U): { [k in keyof T]: U; } {
+export function createProxyObjectFromTemplate<T extends object, U>(from: T, fn: (key: keyof T, fn: (...args: unknown[]) => unknown) => U): { [k in keyof T]: U; } {
   const keys = Object.getOwnPropertyNames(Object.getPrototypeOf(from));
   if (keys.includes('__proto__')) {
     throw new Error('createProxyObjectFromTemplate: must be an class instance');
