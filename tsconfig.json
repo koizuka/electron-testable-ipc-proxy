@@ -4,8 +4,12 @@
   ],
   "compilerOptions": {
     "target": "es6",
+    "lib": [
+      "es2019"
+    ],
     "strict": true,
     "declaration": true, // generates declaration files
+    "moduleResolution": "node",
     "esModuleInterop": true
   }
 }

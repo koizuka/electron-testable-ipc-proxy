@@ -9,7 +9,7 @@ type Invoker = { invoke: (channel: string, ...args: unknown[]) => Promise<unknow
  * @param channel IPCのチャンネル。 createIpcRendererProxy の channel と同じであること。
  * @param impl 目的のinterfaceを実装した処理クラスのインスタンス
  */
-function registerIpcMainHandler<T extends {}>(ipcMain: Handler, channel: string, impl: T): void {
+function registerIpcMainHandler<T extends object>(ipcMain: Handler, channel: string, impl: T): void {
   const o = createProxyObjectFromTemplate(impl, (key, fn) => fn);
 
   ipcMain.handle(channel, async (event, name: string, ...args: unknown[]) => {
@@ -32,7 +32,7 @@ function replaceError(channel: string, cur: string | number | symbol, args: unkn
  * @param from 目的のinterface Tを実装したダミークラスのインスタンス
  * @returns contextBridge.exposeInMainWorld の第2引数に与えるオブジェクト
  */
-function createIpcRendererProxy<T extends {}>(ipcRenderer: Invoker, channel: string, from: T): T {
+function createIpcRendererProxy<T extends object>(ipcRenderer: Invoker, channel: string, from: T): T {
   return createProxyObjectFromTemplate<T, unknown>(from, (cur) => async (...args: unknown[]) => {
     try {
       return await ipcRenderer.invoke(channel, cur, ...args);
@@ -42,10 +42,10 @@ function createIpcRendererProxy<T extends {}>(ipcRenderer: Invoker, channel: str
   }) as T;
 }
 
-export function setupForPreload<T extends {}>(descriptor: IpcProxyDescriptor<T>, exposeInMainWorld: (apiKey: string, value: T) => void, ipcRenderer: Invoker): void {
+export function setupForPreload<T extends object>(descriptor: IpcProxyDescriptor<T>, exposeInMainWorld: (apiKey: string, value: T) => void, ipcRenderer: Invoker): void {
   exposeInMainWorld(descriptor.window, createIpcRendererProxy<T>(ipcRenderer, descriptor.IpcChannel, descriptor.template));
 }
 
-export function setupForMain<T extends {}>(descriptor: IpcProxyDescriptor<T>, ipcMain: Handler, impl: T): void {
+export function setupForMain<T extends object>(descriptor: IpcProxyDescriptor<T>, ipcMain: Handler, impl: T): void {
   registerIpcMainHandler<T>(ipcMain, descriptor.IpcChannel, impl);
 }
