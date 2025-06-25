@@ -35,7 +35,7 @@ describe('setupForMain', () => {
 
   test('doSomething', async () => {
     handler[desc.IpcChannel]({}, 'doSomething', 1);
-    expect(mock.doSomething).toBeCalledWith(1);
+    expect(mock.doSomething).toHaveBeenCalledWith(1);
   });
 });
 
@@ -57,9 +57,9 @@ describe('setupForPreload', () => {
     const proxy = exposed[desc.window] as TestInterface;
 
     await proxy.doSomething(1);
-    expect(invoke).toBeCalledWith(desc.IpcChannel, 'doSomething', 1);
+    expect(invoke).toHaveBeenCalledWith(desc.IpcChannel, 'doSomething', 1);
 
     await expect(proxy.doSomething('a')).rejects.toThrow(`'test'.doSomething("a"): invoke`);
-    expect(invoke).toBeCalledWith(desc.IpcChannel, 'doSomething', 'a');
+    expect(invoke).toHaveBeenCalledWith(desc.IpcChannel, 'doSomething', 'a');
   });
 });

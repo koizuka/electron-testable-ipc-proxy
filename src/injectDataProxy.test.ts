@@ -53,7 +53,7 @@ test('injectDataReceiverProxy', async () => {
   expect(p).resolves.toBe(1);
 
   // make sure data is read only
-  expect(() => { object.data = 3; }).toThrowError;
+  expect(() => { object.data = 3; }).toThrow();
 });
 
 test('injectDataSenderProxy', async () => {
@@ -64,22 +64,22 @@ test('injectDataSenderProxy', async () => {
   const receiver = jest.fn<void, [string, unknown]>();
   injectDataSenderProxy(sender, receiver);
 
-  expect(receiver).toBeCalledWith('data', 1);
+  expect(receiver).toHaveBeenCalledWith('data', 1);
   expect(sender.data).toBe(1);
 
   sender.data = 2;
-  expect(receiver).toBeCalledWith('data', 2);
+  expect(receiver).toHaveBeenCalledWith('data', 2);
   expect(sender.data).toBe(2);
 
   sender.promiseData = Promise.resolve('good-bye');
   await Promise.resolve();
-  expect(receiver).toBeCalledWith('promiseData', 'good-bye');
+  expect(receiver).toHaveBeenCalledWith('promiseData', 'good-bye');
 
   sender.undefinedData = 3;
-  expect(receiver).not.toBeCalledWith('undefinedData', 3);
+  expect(receiver).not.toHaveBeenCalledWith('undefinedData', 3);
 
   sender.data = undefined;
-  expect(receiver).toBeCalledWith('data', undefined);
+  expect(receiver).toHaveBeenCalledWith('data', undefined);
   sender.data = 4;
-  expect(receiver).toBeCalledWith('data', 4);
+  expect(receiver).toHaveBeenCalledWith('data', 4);
 });
