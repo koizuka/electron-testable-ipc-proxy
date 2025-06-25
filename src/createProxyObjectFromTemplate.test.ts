@@ -15,11 +15,11 @@ test('createProxyObjectFromTemplate inject functions', () => {
   const target = mock as TestInterface;
 
   target.doSomething(42);
-  expect(mock.doSomething).toBeCalledWith(42);
+  expect(mock.doSomething).toHaveBeenCalledWith(42);
 
   mock.doAnother.mockReturnValue('test');
   expect(target.doAnother('hello')).toBe('test');
-  expect(mock.doAnother).toBeCalledWith('hello');
+  expect(mock.doAnother).toHaveBeenCalledWith('hello');
 })
 
 test('createProxyObjectFromTemplate throw is not an class instance', () => {
