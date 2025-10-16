@@ -12,6 +12,11 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # OIDC トークンを発行する権限を付与
+    permissions:
+      contents: read
+      id-token: write
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -20,9 +25,7 @@ jobs:
       # npm に公開するように .npmrc ファイルを設定する
       - uses: actions/setup-node@v5
         with:
-          node-version: '18.x'
+          node-version: '22.x'
           registry-url: 'https://registry.npmjs.org'
       - run: yarn
-      - run: yarn publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: yarn publish --provenance --access public
