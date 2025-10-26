@@ -27,5 +27,12 @@ jobs:
         with:
           node-version: '22.x'
           registry-url: 'https://registry.npmjs.org'
-      - run: yarn
-      - run: yarn publish --provenance --access public
+
+      - name: Upgrade npm to v11+ for OIDC support
+        run: npm install -g npm@latest
+
+      - name: Check npm version
+        run: npm --version
+
+      - run: npm install
+      - run: npm publish --provenance --access public
