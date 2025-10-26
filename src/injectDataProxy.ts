@@ -13,7 +13,7 @@ function isPromise(v: unknown): v is Promise<unknown> {
  *     if the value is yet undetermined when initialization time, use Promise rather than value `undefined`.
  *     property initialized with `undefined` will not be injected proxy.
  */
-export function injectDataSenderProxy<T extends {}>(target: T, fn: (key: keyof T, value: unknown) => void): void {
+export function injectDataSenderProxy<T extends object>(target: T, fn: (key: keyof T, value: unknown) => void): void {
   const keys = (Object.getOwnPropertyNames(target) as (keyof T)[]).filter(key => typeof target[key] !== 'function');
   if (keys.length === 0) {
     return;
@@ -56,7 +56,7 @@ export function injectDataSenderProxy<T extends {}>(target: T, fn: (key: keyof T
  *   - receiver(key, value): call when value has received. data member is set to the value
  *   - nextValue(key): resolve when next value has received
  */
-export function injectDataReceiverProxy<T extends {}>(target: T, desc: IpcProxyDescriptor<T>): {
+export function injectDataReceiverProxy<T extends object>(target: T, desc: IpcProxyDescriptor<T>): {
   receiver: (key: keyof T, value: unknown) => void,
   nextValue: (key: keyof T) => Promise<unknown>,
 } {
@@ -64,7 +64,7 @@ export function injectDataReceiverProxy<T extends {}>(target: T, desc: IpcProxyD
   const keys = (Object.getOwnPropertyNames(from) as (keyof T)[]).filter(key => typeof from[key] !== 'function');
 
   for (const key of keys) {
-    if (target.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(target, key)) {
       delete target[key];
     }
   }
@@ -108,17 +108,17 @@ export function injectDataReceiverProxy<T extends {}>(target: T, desc: IpcProxyD
 
   return {
     receiver: (key: keyof T, value: unknown) => {
-      if (!data.hasOwnProperty(key)) {
+      if (!Object.prototype.hasOwnProperty.call(data, key)) {
         throw new Error(`unknown key: ${String(key)}`);
       }
       if (typeof from[key] === 'function') {
         throw new Error(`key is function: ${String(key)}`);
       }
 
-      if (!target.hasOwnProperty(key)) {
+      if (!Object.prototype.hasOwnProperty.call(target, key)) {
         Object.defineProperty(target, key, {
           get: () => {
-            if (!data.hasOwnProperty(key) || !data[key].hasOwnProperty('value')) {
+            if (!Object.prototype.hasOwnProperty.call(data, key) || !Object.prototype.hasOwnProperty.call(data[key], 'value')) {
               return undefined; // not yet received
             }
             const d = data[key] as { value: unknown };
