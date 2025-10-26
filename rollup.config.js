@@ -10,7 +10,13 @@ export default [
       file: 'dist/index.es.js', format: 'es',
     },
     plugins: [
-      typescript(),
+      typescript({
+        tsconfigOverride: {
+          compilerOptions: {
+            importHelpers: false
+          }
+        }
+      }),
       babel({
         babelHelpers: 'bundled',
         extensions: ['.ts'],
@@ -28,7 +34,13 @@ export default [
       indent: false,
     },
     plugins: [
-      typescript(),
+      typescript({
+        tsconfigOverride: {
+          compilerOptions: {
+            importHelpers: false
+          }
+        }
+      }),
       babel({
         babelHelpers: 'bundled',
         extensions: ['.ts'],
