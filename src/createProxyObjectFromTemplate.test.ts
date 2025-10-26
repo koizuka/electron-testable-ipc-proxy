@@ -11,7 +11,7 @@ class TestClass implements TestInterface {
 };
 
 test('createProxyObjectFromTemplate inject functions', () => {
-  const mock = createProxyObjectFromTemplate(new TestClass() as TestInterface, () => jest.fn());
+  const mock = createProxyObjectFromTemplate(new TestClass() as TestInterface, () => vi.fn());
   const target = mock as TestInterface;
 
   target.doSomething(42);
@@ -27,6 +27,6 @@ test('createProxyObjectFromTemplate throw is not an class instance', () => {
     doSomething: (param: number) => { /* do nothing */ },
     doAnother: (param: string) => param,
   };
-  expect(() => createProxyObjectFromTemplate(badObject as TestInterface, () => jest.fn())).toThrow();
+  expect(() => createProxyObjectFromTemplate(badObject as TestInterface, () => vi.fn())).toThrow();
 })
 

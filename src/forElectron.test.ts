@@ -27,7 +27,7 @@ describe('setupForMain', () => {
     handler[channel] = fn;
   };
   const mock = new MockClass();
-  mock.doSomething = jest.fn<Promise<void>, [number]>();
+  mock.doSomething = vi.fn<Promise<void>, [number]>();
 
   setupForMain(desc, { handle }, mock);
   expect(handler[desc.IpcChannel]).toBeDefined();
@@ -45,7 +45,7 @@ describe('setupForPreload', () => {
   const exposeInMainWorld = (apiKey: string, value: TestInterface) => {
     exposed[apiKey] = value;
   };
-  const invoke = jest.fn<Promise<void>, [string, ...unknown[]]>()
+  const invoke = vi.fn<Promise<void>, [string, ...unknown[]]>()
     .mockResolvedValueOnce(undefined)
     .mockRejectedValueOnce(new Error(`Error invoking remote method '${desc.IpcChannel}': Error: invoke`));
 

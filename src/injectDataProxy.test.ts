@@ -44,13 +44,16 @@ test('injectDataReceiverProxy', async () => {
   expect(object.promiseData).not.toBe(undefined);
   expect(isPromise(object.promiseData)).toBe(true);
 
-  expect(object.promiseData).resolves.toBe('hello');
-
   const p = nextValue('data');
   receiver('data', 1);
   expect(object.hasOwnProperty('data')).toBe(true);
   expect(object.data).toBe(1);
-  expect(p).resolves.toBe(1);
+  await expect(p).resolves.toBe(1);
+
+  // test promiseData receives value through receiver and resolves
+  const promiseDataPromise = object.promiseData;
+  receiver('promiseData', 'received-value');
+  await expect(promiseDataPromise).resolves.toBe('received-value');
 
   // make sure data is read only
   expect(() => { object.data = 3; }).toThrow();
@@ -61,7 +64,7 @@ test('injectDataSenderProxy', async () => {
   sender.data = 1;
   sender.promiseData = new Promise(() => { }); // never resolves
 
-  const receiver = jest.fn<void, [string, unknown]>();
+  const receiver = vi.fn<void, [string, unknown]>();
   injectDataSenderProxy(sender, receiver);
 
   expect(receiver).toHaveBeenCalledWith('data', 1);
