@@ -14,7 +14,8 @@ export default [
         tsconfigOverride: {
           compilerOptions: {
             importHelpers: false
-          }
+          },
+          exclude: ['**/*.test.ts', '**/*.spec.ts']
         }
       }),
       babel({
@@ -38,7 +39,8 @@ export default [
         tsconfigOverride: {
           compilerOptions: {
             importHelpers: false
-          }
+          },
+          exclude: ['**/*.test.ts', '**/*.spec.ts']
         }
       }),
       babel({
