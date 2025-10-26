@@ -3,15 +3,15 @@ import { createProxyObjectFromTemplate } from "./createProxyObjectFromTemplate"
 interface TestInterface {
   doSomething: (param: number) => void;
   doAnother: (param: string) => string;
-};
+}
 
 class TestClass implements TestInterface {
-  doSomething(param: number) { }
+  doSomething() { }
   doAnother(param: string) { return param; }
-};
+}
 
 test('createProxyObjectFromTemplate inject functions', () => {
-  const mock = createProxyObjectFromTemplate(new TestClass() as TestInterface, () => jest.fn());
+  const mock = createProxyObjectFromTemplate(new TestClass() as TestInterface, () => vi.fn());
   const target = mock as TestInterface;
 
   target.doSomething(42);
@@ -24,9 +24,9 @@ test('createProxyObjectFromTemplate inject functions', () => {
 
 test('createProxyObjectFromTemplate throw is not an class instance', () => {
   const badObject = {
-    doSomething: (param: number) => { /* do nothing */ },
+    doSomething: () => { /* do nothing */ },
     doAnother: (param: string) => param,
   };
-  expect(() => createProxyObjectFromTemplate(badObject as TestInterface, () => jest.fn())).toThrow();
+  expect(() => createProxyObjectFromTemplate(badObject as TestInterface, () => vi.fn())).toThrow();
 })
 

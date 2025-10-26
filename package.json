@@ -13,7 +13,9 @@
   "scripts": {
     "build": "rollup -c",
     "prepack": "npm run build",
-    "test": "jest"
+    "test": "vitest",
+    "test:ci": "vitest run",
+    "lint": "eslint . --ext .ts"
   },
   "repository": {
     "type": "git",
@@ -24,7 +26,7 @@
     "ipc",
     "proxy",
     "typescript",
-    "jest"
+    "vitest"
   ],
   "author": "koizuka",
   "license": "MIT",
@@ -35,13 +37,16 @@
   "devDependencies": {
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-terser": "^0.4.0",
-    "@types/jest": "^30.0.0",
-    "jest": "^30.0.2",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "@vitest/ui": "^4.0.3",
+    "eslint": "^8.57.1",
+    "eslint-plugin-vitest": "^0.5.4",
     "rollup": "^4.0.2",
     "rollup-plugin-typescript2": "^0.36.0",
-    "ts-jest": "^29.0.5",
     "tslib": "^2.8.1",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.2",
+    "vitest": "^4.0.3"
   },
   "peerDependencies": {
     "electron": ">= 6.1.0"
