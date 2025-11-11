@@ -7,6 +7,14 @@ updates:
   open-pull-requests-limit: 10
   cooldown:
     default-days: 7
+  groups:
+    typescript-eslint:
+      patterns:
+        - "@typescript-eslint/*"
+    vitest:
+      patterns:
+        - "vitest"
+        - "@vitest/*"
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:
