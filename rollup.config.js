@@ -1,5 +1,4 @@
-import typescript from 'rollup-plugin-typescript2'
-import babel from '@rollup/plugin-babel'
+import typescript from '@rollup/plugin-typescript'
 import terser from '@rollup/plugin-terser'
 
 export default [
@@ -7,20 +6,15 @@ export default [
   {
     input: 'src/index.ts',
     output: {
-      file: 'dist/index.es.js', format: 'es',
+      file: 'dist/index.es.js',
+      format: 'es',
     },
     plugins: [
       typescript({
-        tsconfigOverride: {
-          compilerOptions: {
-            importHelpers: false
-          },
-          exclude: ['**/*.test.ts', '**/*.spec.ts']
-        }
-      }),
-      babel({
-        babelHelpers: 'bundled',
-        extensions: ['.ts'],
+        exclude: ['**/*.test.ts', '**/*.spec.ts'],
+        compilerOptions: {
+          declarationDir: './dist',
+        },
       }),
     ],
   },
@@ -31,22 +25,13 @@ export default [
     output: {
       file: 'dist/index.umd.min.js',
       format: 'umd',
-      name: 'reactUseThrottle',
+      name: 'electronTestableipcProxy',
       indent: false,
     },
     plugins: [
       typescript({
-        tsconfigOverride: {
-          compilerOptions: {
-            importHelpers: false
-          },
-          exclude: ['**/*.test.ts', '**/*.spec.ts']
-        }
-      }),
-      babel({
-        babelHelpers: 'bundled',
-        extensions: ['.ts'],
-        exclude: 'node_modules/**',
+        exclude: ['**/*.test.ts', '**/*.spec.ts'],
+        declaration: false,
       }),
       terser(),
     ],
