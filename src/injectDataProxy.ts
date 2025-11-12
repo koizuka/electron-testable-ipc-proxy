@@ -44,7 +44,11 @@ export function injectDataSenderProxy<T extends object>(target: T, fn: (key: key
   };
 
   for (const key of keys) {
-    defineKey(key, target[key]);
+    const initialValue = target[key];
+    // Skip properties with undefined initial value (ES2022+ class fields without initializer)
+    if (initialValue !== undefined) {
+      defineKey(key, initialValue);
+    }
   }
 }
 
