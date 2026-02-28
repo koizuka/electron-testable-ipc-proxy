@@ -8,6 +8,12 @@ updates:
   cooldown:
     default-days: 7
   groups:
+    eslint:
+      patterns:
+        - "eslint"
+        - "@eslint/*"
+        - "eslint-plugin-*"
+        - "typescript-eslint"
     vitest:
       patterns:
         - "vitest"
