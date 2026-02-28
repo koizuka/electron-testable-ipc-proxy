@@ -30,8 +30,11 @@ describe('setupForMain', () => {
   mock.doSomething = vi.fn<[number], Promise<void>>();
 
   setupForMain(desc, { handle }, mock);
-  expect(handler[desc.IpcChannel]).toBeDefined();
-  expect(Object.keys(handler).length).toBe(1);
+
+  test('handler is registered', () => {
+    expect(handler[desc.IpcChannel]).toBeDefined();
+    expect(Object.keys(handler).length).toBe(1);
+  });
 
   test('doSomething', async () => {
     handler[desc.IpcChannel]({}, 'doSomething', 1);
@@ -50,8 +53,11 @@ describe('setupForPreload', () => {
     .mockRejectedValueOnce(new Error(`Error invoking remote method '${desc.IpcChannel}': Error: invoke`));
 
   setupForPreload(desc, exposeInMainWorld, { invoke });
-  expect(exposed[desc.window]).toBeDefined();
-  expect(Object.keys(exposed).length).toBe(1);
+
+  test('proxy is exposed', () => {
+    expect(exposed[desc.window]).toBeDefined();
+    expect(Object.keys(exposed).length).toBe(1);
+  });
 
   test('doSomething', async () => {
     const proxy = exposed[desc.window] as TestInterface;

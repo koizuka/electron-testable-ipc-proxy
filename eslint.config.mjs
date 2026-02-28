@@ -1,5 +1,6 @@
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import vitest from '@vitest/eslint-plugin';
 
 export default [
   {
@@ -13,11 +14,6 @@ export default [
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
-        // Vitest globals
-        vi: 'readonly',
-        describe: 'readonly',
-        test: 'readonly',
-        expect: 'readonly',
         // Node.js
         process: 'readonly',
         console: 'readonly',
@@ -28,5 +24,19 @@ export default [
       },
     },
     rules: {},
+  },
+  {
+    files: ['**/*.test.ts'],
+    plugins: {
+      vitest,
+    },
+    rules: {
+      ...vitest.configs.recommended.rules,
+    },
+    settings: {
+      vitest: {
+        typecheck: false,
+      },
+    },
   },
 ];

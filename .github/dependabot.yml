@@ -13,6 +13,7 @@ updates:
         - "eslint"
         - "@eslint/*"
         - "eslint-plugin-*"
+        - "@vitest/eslint-plugin"
         - "typescript-eslint"
     vitest:
       patterns:
