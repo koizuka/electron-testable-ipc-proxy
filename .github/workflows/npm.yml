@@ -25,7 +25,7 @@ jobs:
       # npm に公開するように .npmrc ファイルを設定する
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Upgrade npm to v11+ for OIDC support
