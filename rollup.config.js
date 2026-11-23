@@ -1,27 +1,22 @@
-import typescript from '@rollup/plugin-typescript'
 import terser from '@rollup/plugin-terser'
+
+// TypeScript is compiled by `tsc -p tsconfig.build.json` into ./build first
+// (declarations go directly to ./dist); rollup only bundles the emitted JS.
+const input = 'build/index.js'
 
 export default [
   // ES Modules
   {
-    input: 'src/index.ts',
+    input,
     output: {
       file: 'dist/index.es.mjs',
       format: 'es',
     },
-    plugins: [
-      typescript({
-        exclude: ['**/*.test.ts', '**/*.spec.ts'],
-        compilerOptions: {
-          declarationDir: './dist',
-        },
-      }),
-    ],
   },
 
   // UMD
   {
-    input: 'src/index.ts',
+    input,
     output: {
       file: 'dist/index.umd.min.js',
       format: 'umd',
@@ -29,12 +24,7 @@ export default [
       indent: false,
     },
     plugins: [
-      typescript({
-        exclude: ['**/*.test.ts', '**/*.spec.ts'],
-        declaration: false,
-      }),
       terser(),
     ],
   },
 ]
-

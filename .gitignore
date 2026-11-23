@@ -3,3 +3,4 @@ node_modules/
 electron-testable-ipc-proxy-*.tgz
 yarn-error.log
 .claude/settings.local.json
+build/
