@@ -4,11 +4,11 @@
   ],
   "compilerOptions": {
     "target": "es2022",
-    "rootDir": "./src",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["vitest/globals"],
     "strict": true,
-    "declaration": true, // generates declaration files
     "esModuleInterop": true,
-    "importHelpers": false,
-    "noEmitHelpers": true
+    "noEmit": true
   }
 }

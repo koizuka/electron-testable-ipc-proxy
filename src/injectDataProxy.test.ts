@@ -70,7 +70,7 @@ test('injectDataSenderProxy', async () => {
   sender.data = 1;
   sender.promiseData = new Promise(() => { }); // never resolves
 
-  const receiver = vi.fn<[string, unknown], void>();
+  const receiver = vi.fn<(key: string, value: unknown) => void>();
   injectDataSenderProxy(sender, receiver);
 
   expect(receiver).toHaveBeenCalledWith('data', 1);

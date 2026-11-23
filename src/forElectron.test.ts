@@ -18,7 +18,7 @@ const desc: IpcProxyDescriptor<TestInterface> = {
 };
 
 class MockClass implements TestInterface {
-  async doSomething(): Promise<void> { }
+  async doSomething(_param: number | string): Promise<void> { }
 }
 
 describe('setupForMain', () => {
@@ -27,7 +27,7 @@ describe('setupForMain', () => {
     handler[channel] = fn;
   };
   const mock = new MockClass();
-  mock.doSomething = vi.fn<[number], Promise<void>>();
+  mock.doSomething = vi.fn<TestInterface['doSomething']>();
 
   setupForMain(desc, { handle }, mock);
 
@@ -48,7 +48,7 @@ describe('setupForPreload', () => {
   const exposeInMainWorld = (apiKey: string, value: TestInterface) => {
     exposed[apiKey] = value;
   };
-  const invoke = vi.fn<[string, ...unknown[]], Promise<void>>()
+  const invoke = vi.fn<(channel: string, ...args: unknown[]) => Promise<void>>()
     .mockResolvedValueOnce(undefined)
     .mockRejectedValueOnce(new Error(`Error invoking remote method '${desc.IpcChannel}': Error: invoke`));
 
