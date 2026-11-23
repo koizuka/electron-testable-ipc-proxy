@@ -18,7 +18,7 @@ const desc: IpcProxyDescriptor<TestInterface> = {
 };
 
 class MockClass implements TestInterface {
-  async doSomething(): Promise<void> { }
+  async doSomething(_param: number | string): Promise<void> { }
 }
 
 describe('setupForMain', () => {
@@ -27,7 +27,7 @@ describe('setupForMain', () => {
     handler[channel] = fn;
   };
   const mock = new MockClass();
-  mock.doSomething = vi.fn<() => Promise<void>>();
+  mock.doSomething = vi.fn<TestInterface['doSomething']>();
 
   setupForMain(desc, { handle }, mock);
 
